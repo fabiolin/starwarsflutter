@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Get.to(HomeRegisterPage());
+          Get.to(() => HomeRegisterPage());
         },
         label: const Icon(FontAwesomeIcons.plus,
             size: 14, color: Color(0xff252a34)),
@@ -63,28 +63,34 @@ class HomePage extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(film.title,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Color(0xffe0e3eb))),
-                                      Text(film.director,
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xffe0e3eb))),
-                                      SizedBox(height: 10)
-                                    ],
-                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        _homeController.idUpdate = film.id;
+                                        Get.to(() => HomeRegisterPage());
+                                        _homeController.fillUpdate();
+                                      },
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(film.title,
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Color(0xffe0e3eb))),
+                                          Text(film.director,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Color(0xffe0e3eb))),
+                                          SizedBox(height: 10)
+                                        ],
+                                      )),
                                   GestureDetector(
                                       onTap: () {
                                         _homeController.deleteFilm(film.id);
                                         _homeController.getFilms();
                                       },
                                       child: Icon(FontAwesomeIcons.minusCircle,
-                                          size: 14, color: Color(0xffe0e3eb))),
+                                          size: 16, color: Color(0xffe0e3eb))),
                                 ],
                               )
                           ])))

@@ -5,8 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../controller/home_controller.dart';
+import 'home_page.dart';
 
 class HomeRegisterPage extends StatelessWidget {
+  HomeRegisterPage({this.id});
+  final String id;
+
   final HomeController _homeController = Get.find();
 
   @override
@@ -91,6 +95,8 @@ class HomeRegisterPage extends StatelessWidget {
                                     _homeController.openingCrawlTextController,
                                 keyboardType: TextInputType.text,
                                 autocorrect: false,
+                                minLines: 1,
+                                maxLines: 6,
                                 decoration: InputDecoration(
                                   filled: true,
                                   hintText: 'Descrição',
@@ -224,22 +230,29 @@ class HomeRegisterPage extends StatelessWidget {
                     Padding(
                         padding: EdgeInsets.only(left: 10, top: 5, right: 20),
                         child: ElevatedButton(
-                            child: Text("CADASTRAR",
+                            child: Text(
+                                _homeController.idUpdate != null &&
+                                        _homeController.idUpdate != ''
+                                    ? "ATUALIZAR"
+                                    : "CADASTRAR",
                                 style: TextStyle(fontSize: 14)),
                             style: ButtonStyle(
-                                foregroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Colors.black),
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        Color(0xFFFFC529)),
+                                foregroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.black),
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    Color(0xFFFFC529)),
                                 shape: MaterialStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
-                                        side: BorderSide(
-                                            color: Color(0xFFFFC529))))),
-                            onPressed: () => _homeController.insertFilm()))
+                                        side: BorderSide(color: Color(0xFFFFC529))))),
+                            onPressed: () {
+                              _homeController.idUpdate != null &&
+                                      _homeController.idUpdate != ''
+                                  ? _homeController.updateFilm()
+                                  : _homeController.insertFilm();
+                              Navigator.of(context).pop();
+                            }))
                   ],
                 ))),
       );

@@ -20,6 +20,18 @@ class HomeController extends GetxController {
   get films => this._films.value;
   set films(value) => this._films.value = value;
 
+  final _idUpdate = ''.obs;
+  get idUpdate => this._idUpdate.value;
+  set idUpdate(value) => this._idUpdate.value = value;
+
+  @override
+  void onInit() {
+    print("1" + idUpdate);
+    getFilms();
+    fillUpdate();
+    super.onInit();
+  }
+
   Future<void> getFilms() async {
     try {
       var result = await _repository.films();
@@ -49,6 +61,53 @@ class HomeController extends GetxController {
       var result = await _repository.insertFilm(film);
       result.fold((failure) => Left(failure), (success) async {
         films.add(film);
+        return true;
+      });
+    } catch (ex) {
+      print(ex);
+    }
+
+    return false;
+  }
+
+  Future<void> fillUpdate() async {
+    try {
+      if (idUpdate != null && idUpdate != '') {
+        var result = await _repository.film(idUpdate);
+
+        result.fold((failure) => Left(failure), (success) async {
+          directorTextController.text = success.director;
+          producerTextController.text = success.producer;
+          openingCrawlTextController.text = success.openingCrawl;
+          episodeIdTextController.text = success.episodeId;
+          releaseDateTextController.text = success.releaseDate;
+          titleTextController.text = success.title;
+          urlTextController.text = success.url;
+        });
+      }
+    } catch (ex) {
+      print(ex);
+    }
+
+    return false;
+  }
+
+  Future<void> updateFilm() async {
+    try {
+      Film film = Film(
+          id: idUpdate,
+          director: directorTextController.text,
+          producer: producerTextController.text,
+          openingCrawl: openingCrawlTextController.text,
+          episodeId: episodeIdTextController.text,
+          releaseDate: releaseDateTextController.text,
+          title: titleTextController.text,
+          url: urlTextController.text);
+
+      var result = await _repository.updateFilm(film);
+      result.fold((failure) => Left(failure), (success) async {
+        getFilms();
+        idUpdate = '';
         return true;
       });
     } catch (ex) {

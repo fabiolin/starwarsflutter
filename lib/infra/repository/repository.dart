@@ -7,7 +7,7 @@ import '../../presentation/model/film_model.dart';
 import '../errors/failure.dart';
 
 class Repository {
-  final String _baseUrl = 'https://76b3d0a2b5b4.ngrok.io/';
+  final String _baseUrl = 'https://46a28349eeec.ngrok.io/';
 
   Future<Either<Failure, List<Film>>> films() async {
     try {
@@ -26,14 +26,53 @@ class Repository {
     return Right([]);
   }
 
+  Future<Either<Failure, Film>> film(String id) async {
+    try {
+      final response = await http.get(Uri.parse(_baseUrl + 'Film/' + id));
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return Right(Film.fromJson(jsonDecode(response.body)));
+      }
+    } catch (e) {
+      print(e.toString());
+      return Left(Failure(
+          // title: e.response?.statusCode,
+          message: e.response));
+    }
+
+    return Right(Film());
+  }
+
   Future<Either<Failure, bool>> insertFilm(Film film) async {
     try {
       var _headers = new Map<String, String>();
-      _headers['accept'] = "application/json;charset=utf-8";
+      _headers['accept'] = "application/json";
+      _headers['content-type'] = "application/json";
 
       final response = await http.post(Uri.parse(_baseUrl + 'Film'),
           body: jsonEncode(film.toJson()), headers: _headers);
-      print('veio2');
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        return Right(true);
+      }
+    } catch (e) {
+      print(e.toString());
+      return Left(Failure(
+          // title: e.response?.statusCode,
+          message: e.response));
+    }
+
+    return Right(false);
+  }
+
+  Future<Either<Failure, bool>> updateFilm(Film film) async {
+    try {
+      var _headers = new Map<String, String>();
+      _headers['accept'] = "application/json";
+      _headers['content-type'] = "application/json";
+
+      final response = await http.put(Uri.parse(_baseUrl + 'Film'),
+          body: jsonEncode(film.toJson()), headers: _headers);
       print(response.statusCode);
       if (response.statusCode == 200) {
         return Right(true);
