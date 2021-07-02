@@ -29,6 +29,19 @@ class Film {
         title: json['title'] as String,
         url: json['url'] as String);
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'director': director,
+      'producer': producer,
+      'opening_crawl': openingCrawl,
+      'episode_id': episodeId,
+      'release_date': releaseDate,
+      'title': title,
+      'url': url
+    };
+  }
 }
 
 class FilmsList {
